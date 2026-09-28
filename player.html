@@ -1,1313 +1,1360 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <html lang="es">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Música de Kimchi y Mojo</title>
+    <title>Música de Kimchi y Mojo</title>
 
-<style>
+    <style>
 
-/* =====================================================
-   CONFIGURACIÓN GENERAL
-===================================================== */
+    /* =====================================================
+       CONFIGURACIÓN GENERAL
+    ===================================================== */
 
-* {
-  box-sizing: border-box;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  font-family: Arial, Helvetica, sans-serif;
-}
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
-body {
-  padding: 3px;
-}
+    body {
+      padding: 3px;
+    }
 
 
-/* =====================================================
-   REPRODUCTOR
-===================================================== */
+    /* =====================================================
+       REPRODUCTOR
+    ===================================================== */
 
-.kym-player {
-  width: 100%;
-  max-width: 270px;
-  margin: 0 auto;
+    .kym-player {
+      width: 100%;
+      max-width: 270px;
+      margin: 0 auto;
 
-  padding: 10px 12px 9px;
+      padding: 10px 12px 9px;
 
-  background:
-    linear-gradient(
-      180deg,
-      #fffaf0 0%,
-      #fffaf4 100%
-    );
+      background:
+        linear-gradient(
+          180deg,
+          #fffaf0 0%,
+          #fffaf4 100%
+        );
 
-  border: 1px solid #e7b83f;
-  border-radius: 18px;
+      border: 1px solid #e7b83f;
+      border-radius: 18px;
 
-  text-align: center;
+      text-align: center;
 
-  box-shadow:
-    0 3px 10px rgba(0, 0, 0, 0.06);
-}
+      box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.06);
+    }
 
 
-/* =====================================================
-   CHIBI AMI
-===================================================== */
-
-.kym-ami {
-  display: block;
-
-  width: 103px;
-  height: auto;
-
-  margin: -3px auto 0;
-
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
-
-/* =====================================================
-   TÍTULO
-===================================================== */
-
-.kym-title {
-  margin: 0 0 2px;
-
-  color: #bd1bb5;
-
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.kym-korean {
-  margin: 2px 0 7px;
-
-  color: #d04bab;
-
-  font-size: 10px;
-}
-
-
-/* =====================================================
-   CANCIÓN ACTUAL
-===================================================== */
-
-.kym-now {
-  display: flex;
-
-  justify-content: center;
-  align-items: center;
-
-  gap: 6px;
-
-  min-height: 25px;
-
-  margin: 4px 0 6px;
-
-  color: #a72caf;
-
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.kym-main-note {
-  display: inline-block;
-
-  color: #8c57a5;
-
-  font-size: 18px;
-
-  animation: noteFloat 1.8s ease-in-out infinite;
-}
-
-@keyframes noteFloat {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-2px);
-  }
-
-}
-
-
-/* =====================================================
-   AUDIO NATIVO
-===================================================== */
-
-#audioPlayer {
-  display: block;
-
-  width: 100%;
-  height: 40px;
-
-  margin: 0 auto;
-}
-
-
-/* =====================================================
-   BOTONES
-===================================================== */
-
-.kym-controls {
-  display: flex;
-
-  justify-content: center;
-  align-items: center;
-
-  gap: 7px;
-
-  margin: 9px 0 10px;
-}
-
-.kym-button {
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  width: 36px;
-  height: 36px;
-
-  padding: 0;
-
-  border: 1px solid #e2b7de;
-  border-radius: 50%;
-
-  background: #ffffff;
-
-  color: #b51bb5;
-
-  font-size: 14px;
-
-  cursor: pointer;
-
-  box-shadow:
-    0 2px 5px rgba(0, 0, 0, 0.05);
-
-  transition:
-    transform 0.15s ease,
-    background 0.15s ease,
-    color 0.15s ease,
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
-}
-
-
-/* Botones anterior/siguiente */
-
-.kym-button.main {
-  width: 43px;
-  height: 43px;
-
-  font-size: 17px;
-}
-
-
-/* Hover */
-
-.kym-button:hover {
-  background: #fff0fc;
-
-  transform: translateY(-1px);
-
-  box-shadow:
-    0 3px 7px rgba(181, 27, 181, 0.13);
-}
-
-
-/* Pulsación */
-
-.kym-button:active {
-  transform: scale(0.94);
-}
-
-
-/* Aleatorio/repetición activados */
-
-.kym-button.active {
-  background: #b51bb5;
-
-  border-color: #b51bb5;
-
-  color: white;
-
-  box-shadow:
-    0 2px 7px rgba(181, 27, 181, 0.25);
-}
-
-
-/* =====================================================
-   CABECERA PLAYLIST
-===================================================== */
-
-.kym-playlist-header {
-  display: flex;
-
-  justify-content: space-between;
-  align-items: center;
-
-  margin-top: 2px;
-
-  padding: 0 3px 5px;
-
-  border-bottom:
-    1px solid #efd8ea;
-
-  color: #b34baa;
-
-  font-size: 9px;
-
-  text-transform: uppercase;
-
-  letter-spacing: 0.2px;
-}
-
-.kym-song-count {
-  color: #c979bf;
-
-  font-size: 8px;
-}
-
-
-/* =====================================================
-   PLAYLIST
-===================================================== */
-
-.kym-playlist {
-  width: 100%;
-
-  padding-top: 3px;
-
-  text-align: left;
-}
-
-
-/* =====================================================
-   CADA CANCIÓN
-===================================================== */
-
-.kym-song {
-  position: relative;
-
-  display: flex;
-
-  align-items: center;
-
-  min-height: 23px;
-
-  margin: 0;
-
-  padding:
-    4px
-    28px
-    4px
-    24px;
-
-  border-radius: 8px;
-
-  color: #a823a8;
-
-  font-size: 10.5px;
-  line-height: 1.2;
-
-  cursor: pointer;
-
-  transition:
-    background 0.15s ease,
-    color 0.15s ease,
-    transform 0.15s ease;
-}
-
-
-/* Nota musical */
-
-.kym-song::before {
-  content: "♫";
-
-  position: absolute;
-
-  left: 7px;
-
-  color: #c149bb;
-
-  font-size: 11px;
-}
-
-
-/* Hover */
-
-.kym-song:hover {
-  background: #fff0fb;
-
-  transform: translateX(2px);
-}
-
-
-/* =====================================================
-   CANCIÓN SELECCIONADA
-===================================================== */
-
-.kym-song.active {
-
-  background:
-    linear-gradient(
-      90deg,
-      #f4d6f1 0%,
-      #fff1fa 100%
-    );
-
-  color: #821582;
-
-  font-weight: 700;
-}
-
-
-/* Triángulo en canción seleccionada */
-
-.kym-song.active::before {
-  content: "▶";
-
-  top: 6px;
-
-  color: #b51bb5;
-
-  font-size: 8px;
-}
-
-
-/* =====================================================
-   ECUALIZADOR ANIMADO
-===================================================== */
-
-.kym-equalizer {
-  display: none;
-
-  position: absolute;
-
-  right: 8px;
-  bottom: 6px;
-
-  height: 12px;
-
-  align-items: flex-end;
-
-  gap: 2px;
-}
-
-
-/* Solo aparece si está sonando */
-
-.kym-song.active.playing
-.kym-equalizer {
-  display: flex;
-}
-
-
-.kym-bar {
-  width: 2px;
-  height: 3px;
-
-  background: #c332b8;
-
-  border-radius: 2px;
-
-  animation:
-    kymEqualizer
-    0.65s
-    infinite
-    ease-in-out;
-}
-
-
-.kym-bar:nth-child(2) {
-  animation-delay: 0.12s;
-}
-
-.kym-bar:nth-child(3) {
-  animation-delay: 0.24s;
-}
-
-.kym-bar:nth-child(4) {
-  animation-delay: 0.36s;
-}
-
-
-@keyframes kymEqualizer {
-
-  0%,
-  100% {
-    height: 3px;
-  }
-
-  50% {
-    height: 11px;
-  }
-
-}
-
-
-/* =====================================================
-   PIE
-===================================================== */
-
-.kym-footer {
-  margin-top: 5px;
-
-  padding-top: 6px;
-
-  border-top:
-    1px solid #f0deec;
-
-  color: #b46aae;
-
-  font-size: 7.5px;
-  line-height: 1.2;
-}
-
-
-.kym-heart {
-  display: inline-block;
-
-  color: #d84fb8;
-
-  animation:
-    heartBeat
-    1.7s
-    infinite
-    ease-in-out;
-}
-
-
-@keyframes heartBeat {
-
-  0%,
-  100% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.18);
-  }
-
-}
-
-
-/* =====================================================
-   PANTALLAS MUY PEQUEÑAS
-===================================================== */
-
-@media (max-width: 230px) {
-
-  .kym-player {
-    padding-left: 8px;
-    padding-right: 8px;
-  }
-
-  .kym-title {
-    font-size: 14px;
-  }
-
-  .kym-now {
-    font-size: 14px;
-  }
-
-  .kym-controls {
-    gap: 5px;
-  }
-
-  .kym-button {
-    width: 33px;
-    height: 33px;
-  }
-
-  .kym-button.main {
-    width: 39px;
-    height: 39px;
-  }
-
-}
-
-</style>
-</head>
-
-
-<body>
-
-
-<div class="kym-player">
-
-
-  <!-- =========================================
+    /* =====================================================
        CHIBI AMI
-  ========================================== -->
+    ===================================================== */
 
-  <img
-    class="kym-ami"
-    src="chibi-ami-musica.png"
-    alt="Chibi Ami escuchando música"
-    draggable="false">
+    .kym-ami {
+      display: block;
 
+      width: 103px;
+      height: auto;
 
-  <!-- =========================================
-       NOMBRE
-  ========================================== -->
+      margin: -3px auto 0;
 
-  <div class="kym-title">
-
-    Música de Kimchi y Mojo
-
-  </div>
+      user-select: none;
+      -webkit-user-drag: none;
+    }
 
 
-  <div class="kym-korean">
+    /* =====================================================
+       TÍTULO
+    ===================================================== */
 
-    김치와 모호의 음악
+    .kym-title {
+      margin: 0 0 2px;
 
-  </div>
+      color: #bd1bb5;
+
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .kym-korean {
+      margin: 2px 0 7px;
+
+      color: #d04bab;
+
+      font-size: 10px;
+    }
 
 
-  <!-- =========================================
+    /* =====================================================
        CANCIÓN ACTUAL
-  ========================================== -->
+    ===================================================== */
 
-  <div class="kym-now">
+    .kym-now {
+      display: flex;
 
-    <span class="kym-main-note">
-      ♫
-    </span>
+      justify-content: center;
+      align-items: center;
 
-    <span id="nowPlaying">
-      Tu primera Mirada
-    </span>
+      gap: 6px;
 
-  </div>
+      min-height: 25px;
 
+      margin: 4px 0 6px;
 
-  <!-- =========================================
-       AUDIO
-  ========================================== -->
+      color: #a72caf;
 
-  <audio
-    id="audioPlayer"
-    controls
-    controlsList="nodownload"
-    oncontextmenu="return false;"
-    preload="metadata">
-  </audio>
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
 
+    .kym-main-note {
+      display: inline-block;
 
-  <!-- =========================================
-       CONTROLES
-  ========================================== -->
+      color: #8c57a5;
 
-  <div class="kym-controls">
+      font-size: 18px;
 
+      animation: noteFloat 1.8s ease-in-out infinite;
+    }
 
-    <!-- ANTERIOR -->
+    @keyframes noteFloat {
 
-    <button
-      id="previousButton"
-      class="kym-button main"
-      type="button"
-      title="Canción anterior"
-      aria-label="Canción anterior">
+      0%,
+      100% {
+        transform: translateY(0);
+      }
 
-      ⏮
-
-    </button>
-
-
-    <!-- ALEATORIO -->
-
-    <button
-      id="shuffleButton"
-      class="kym-button"
-      type="button"
-      title="Reproducción aleatoria"
-      aria-label="Reproducción aleatoria">
-
-      🔀
-
-    </button>
-
-
-    <!-- SIGUIENTE -->
-
-    <button
-      id="nextButton"
-      class="kym-button main"
-      type="button"
-      title="Canción siguiente"
-      aria-label="Canción siguiente">
-
-      ⏭
-
-    </button>
-
-
-    <!-- REPETIR -->
-
-    <button
-      id="repeatButton"
-      class="kym-button"
-      type="button"
-      title="Repetir canción"
-      aria-label="Repetir canción">
-
-      🔁
-
-    </button>
-
-
-  </div>
-
-
-  <!-- =========================================
-       PLAYLIST
-  ========================================== -->
-
-  <div class="kym-playlist-header">
-
-    <span>
-      ♫ Mi Playlist
-    </span>
-
-    <span class="kym-song-count">
-      9 canciones
-    </span>
-
-  </div>
-
-
-  <div
-    id="playlist"
-    class="kym-playlist">
-  </div>
-
-
-  <!-- =========================================
-       PIE
-  ========================================== -->
-
-  <div class="kym-footer">
-
-    ♫ Corea con mojo · Canarias con kimchi
-
-    <span class="kym-heart">
-      ♡
-    </span>
-
-  </div>
-
-
-</div>
-
-
-
-<script>
-
-/* =====================================================
-   LISTA DE CANCIONES
-===================================================== */
-
-const songs = [
-
-  {
-    title: "Bajo el Qín",
-    file: "Bajo el Qín.mp3"
-  },
-
-  {
-    title: "Puente de Jade",
-    file: "Puente de Jade.mp3"
-  },
-
-  {
-    title: "Puente de Luz",
-    file: "Puente de Luz.mp3"
-  },
-
-  {
-    title: "Puente de Seda",
-    file: "Puente de Seda.mp3"
-  },
-
-  {
-    title: "Tu primera Mirada",
-    file: "Tu primera Mirada.mp3"
-  },
-
-  {
-    title: "Hilo Quebrado",
-    file: "Hilo Quebrado.mp3"
-  },
-
-  {
-    title: "Hilo de amor roto",
-    file: "Hilo de amor roto.mp3"
-  },
-
-  {
-    title: "Mariposas de Jade",
-    file: "Mariposas de Jade.mp3"
-  },
-
-  {
-    title: "Mariposas en el corazón",
-    file: "Mariposas en el corazon.mp3"
-  }
-
-];
-
-
-/* =====================================================
-   ELEMENTOS
-===================================================== */
-
-const audio =
-  document.getElementById(
-    "audioPlayer"
-  );
-
-const nowPlaying =
-  document.getElementById(
-    "nowPlaying"
-  );
-
-const playlist =
-  document.getElementById(
-    "playlist"
-  );
-
-const previousButton =
-  document.getElementById(
-    "previousButton"
-  );
-
-const nextButton =
-  document.getElementById(
-    "nextButton"
-  );
-
-const shuffleButton =
-  document.getElementById(
-    "shuffleButton"
-  );
-
-const repeatButton =
-  document.getElementById(
-    "repeatButton"
-  );
-
-
-/* =====================================================
-   ESTADO
-===================================================== */
-
-/*
-  4 = Tu primera Mirada
-*/
-
-let currentSong = 4;
-
-let shuffleMode = false;
-
-let repeatMode = false;
-
-
-/* =====================================================
-   CREAR LAS 9 CANCIONES
-===================================================== */
-
-songs.forEach(
-  function(song, index) {
-
-    const item =
-      document.createElement("div");
-
-
-    item.className =
-      "kym-song";
-
-
-    item.dataset.index =
-      index;
-
-
-    /* Nombre */
-
-    const songName =
-      document.createElement("span");
-
-
-    songName.textContent =
-      song.title;
-
-
-    /* Ecualizador */
-
-    const equalizer =
-      document.createElement("span");
-
-
-    equalizer.className =
-      "kym-equalizer";
-
-
-    for (
-      let i = 0;
-      i < 4;
-      i++
-    ) {
-
-      const bar =
-        document.createElement("span");
-
-
-      bar.className =
-        "kym-bar";
-
-
-      equalizer.appendChild(
-        bar
-      );
+      50% {
+        transform: translateY(-2px);
+      }
 
     }
 
 
-    item.appendChild(
-      songName
-    );
+    /* =====================================================
+       AUDIO NATIVO
+    ===================================================== */
+
+    #audioPlayer {
+      display: block;
+
+      width: 100%;
+      height: 40px;
+
+      margin: 0 auto;
+    }
 
 
-    item.appendChild(
-      equalizer
-    );
+    /* =====================================================
+       BOTONES
+    ===================================================== */
+
+    .kym-controls {
+      display: flex;
+
+      justify-content: center;
+      align-items: center;
+
+      gap: 7px;
+
+      margin: 9px 0 10px;
+    }
+
+    .kym-button {
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      width: 36px;
+      height: 36px;
+
+      padding: 0;
+
+      border: 1px solid #e2b7de;
+      border-radius: 50%;
+
+      background: #ffffff;
+
+      color: #b51bb5;
+
+      font-size: 14px;
+
+      cursor: pointer;
+
+      box-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.05);
+
+      transition:
+        transform 0.15s ease,
+        background 0.15s ease,
+        color 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+    }
 
 
-    /* Al pulsar */
+    /* Botones anterior/siguiente */
 
-    item.addEventListener(
-      "click",
-      function() {
+    .kym-button.main {
+      width: 43px;
+      height: 43px;
 
-        loadSong(
-          index,
-          true
+      font-size: 17px;
+    }
+
+
+    /* Hover */
+
+    .kym-button:hover {
+      background: #fff0fc;
+
+      transform: translateY(-1px);
+
+      box-shadow:
+        0 3px 7px rgba(181, 27, 181, 0.13);
+    }
+
+
+    /* Pulsación */
+
+    .kym-button:active {
+      transform: scale(0.94);
+    }
+
+
+    /* Aleatorio/repetición activados */
+
+    .kym-button.active {
+      background: #b51bb5;
+
+      border-color: #b51bb5;
+
+      color: white;
+
+      box-shadow:
+        0 2px 7px rgba(181, 27, 181, 0.25);
+    }
+
+
+    /* =====================================================
+       CABECERA PLAYLIST
+    ===================================================== */
+
+    .kym-playlist-header {
+      display: flex;
+
+      justify-content: space-between;
+      align-items: center;
+
+      margin-top: 2px;
+
+      padding: 0 3px 5px;
+
+      border-bottom:
+        1px solid #efd8ea;
+
+      color: #b34baa;
+
+      font-size: 9px;
+
+      text-transform: uppercase;
+
+      letter-spacing: 0.2px;
+    }
+
+    .kym-song-count {
+      color: #c979bf;
+
+      font-size: 8px;
+    }
+
+
+    /* =====================================================
+       PLAYLIST
+    ===================================================== */
+
+    .kym-playlist {
+      width: 100%;
+
+      padding-top: 3px;
+
+      text-align: left;
+    }
+
+
+    /* =====================================================
+       CADA CANCIÓN
+    ===================================================== */
+
+    .kym-song {
+      position: relative;
+
+      display: flex;
+
+      align-items: center;
+
+      min-height: 23px;
+
+      margin: 0;
+
+      padding:
+        4px
+        28px
+        4px
+        24px;
+
+      border-radius: 8px;
+
+      color: #a823a8;
+
+      font-size: 10.5px;
+      line-height: 1.2;
+
+      cursor: pointer;
+
+      transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        transform 0.15s ease;
+    }
+
+
+    /* Nota musical */
+
+    .kym-song::before {
+      content: "♫";
+
+      position: absolute;
+
+      left: 7px;
+
+      color: #c149bb;
+
+      font-size: 11px;
+    }
+
+
+    /* Hover */
+
+    .kym-song:hover {
+      background: #fff0fb;
+
+      transform: translateX(2px);
+    }
+
+
+    /* =====================================================
+       CANCIÓN SELECCIONADA
+    ===================================================== */
+
+    .kym-song.active {
+
+      background:
+        linear-gradient(
+          90deg,
+          #f4d6f1 0%,
+          #fff1fa 100%
+        );
+
+      color: #821582;
+
+      font-weight: 700;
+    }
+
+
+    /* Triángulo en canción seleccionada */
+
+    .kym-song.active::before {
+      content: "▶";
+
+      top: 6px;
+
+      color: #b51bb5;
+
+      font-size: 8px;
+    }
+
+
+    /* =====================================================
+       ECUALIZADOR ANIMADO
+    ===================================================== */
+
+    .kym-equalizer {
+      display: none;
+
+      position: absolute;
+
+      right: 8px;
+      bottom: 6px;
+
+      height: 12px;
+
+      align-items: flex-end;
+
+      gap: 2px;
+    }
+
+
+    /* Solo aparece si está sonando */
+
+    .kym-song.active.playing
+    .kym-equalizer {
+      display: flex;
+    }
+
+
+    .kym-bar {
+      width: 2px;
+      height: 3px;
+
+      background: #c332b8;
+
+      border-radius: 2px;
+
+      animation:
+        kymEqualizer
+        0.65s
+        infinite
+        ease-in-out;
+    }
+
+
+    .kym-bar:nth-child(2) {
+      animation-delay: 0.12s;
+    }
+
+    .kym-bar:nth-child(3) {
+      animation-delay: 0.24s;
+    }
+
+    .kym-bar:nth-child(4) {
+      animation-delay: 0.36s;
+    }
+
+
+    @keyframes kymEqualizer {
+
+      0%,
+      100% {
+        height: 3px;
+      }
+
+      50% {
+        height: 11px;
+      }
+
+    }
+
+
+    /* =====================================================
+       PIE
+    ===================================================== */
+
+    .kym-footer {
+      margin-top: 5px;
+
+      padding-top: 6px;
+
+      border-top:
+        1px solid #f0deec;
+
+      color: #b46aae;
+
+      font-size: 7.5px;
+      line-height: 1.2;
+    }
+
+
+    .kym-heart {
+      display: inline-block;
+
+      color: #d84fb8;
+
+      animation:
+        heartBeat
+        1.7s
+        infinite
+        ease-in-out;
+    }
+
+
+    @keyframes heartBeat {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.18);
+      }
+
+    }
+
+
+    /* =====================================================
+       PANTALLAS MUY PEQUEÑAS
+    ===================================================== */
+
+    @media (max-width: 230px) {
+
+      .kym-player {
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+
+      .kym-title {
+        font-size: 14px;
+      }
+
+      .kym-now {
+        font-size: 14px;
+      }
+
+      .kym-controls {
+        gap: 5px;
+      }
+
+      .kym-button {
+        width: 33px;
+        height: 33px;
+      }
+
+      .kym-button.main {
+        width: 39px;
+        height: 39px;
+      }
+
+    }
+
+
+    /* =====================================================
+       CONTROLES FINALES — ICONOS SVG MONOCROMÁTICOS
+    ===================================================== */
+    .kym-button svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      pointer-events: none;
+    }
+
+    #previousButton,
+    #nextButton {
+      color: #b51bb5;
+      background: #fffdfc;
+    }
+
+    #shuffleButton,
+    #repeatButton {
+      width: 34px;
+      height: 34px;
+      color: #b51bb5;
+      background: #fffdfc;
+    }
+
+    #shuffleButton.active,
+    #repeatButton.active {
+      background: #f5d8f1;
+      border-color: #cf78c8;
+      color: #8f188f;
+      box-shadow: 0 2px 7px rgba(181, 27, 181, 0.16);
+    }
+
+    </style>
+    </head>
+
+
+    <body>
+
+
+    <div class="kym-player">
+
+
+      <!-- =========================================
+           CHIBI AMI
+      ========================================== -->
+
+      <img
+        class="kym-ami"
+        src="chibi-ami-musica.png"
+        alt="Chibi Ami escuchando música"
+        draggable="false">
+
+
+      <!-- =========================================
+           NOMBRE
+      ========================================== -->
+
+      <div class="kym-title">
+
+        Música de Kimchi y Mojo
+
+      </div>
+
+
+      <div class="kym-korean">
+
+        김치와 모호의 음악
+
+      </div>
+
+
+      <!-- =========================================
+           CANCIÓN ACTUAL
+      ========================================== -->
+
+      <div class="kym-now">
+
+        <span class="kym-main-note">
+          ♫
+        </span>
+
+        <span id="nowPlaying">
+          Tu primera Mirada
+        </span>
+
+      </div>
+
+
+      <!-- =========================================
+           AUDIO
+      ========================================== -->
+
+      <audio
+        id="audioPlayer"
+        controls
+        controlsList="nodownload"
+        oncontextmenu="return false;"
+        preload="metadata">
+      </audio>
+
+
+      <!-- =========================================
+           CONTROLES
+      ========================================== -->
+
+      <div class="kym-controls">
+
+
+        <!-- ANTERIOR -->
+
+        <button
+          id="previousButton"
+          class="kym-button main"
+          type="button"
+          title="Canción anterior"
+          aria-label="Canción anterior">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M6 5v14"></path>
+      <path d="M18 6l-9 6 9 6z"></path>
+    </svg>
+    </button>
+
+
+        <!-- ALEATORIO -->
+
+        <button
+          id="shuffleButton"
+          class="kym-button"
+          type="button"
+          title="Reproducción aleatoria"
+          aria-label="Reproducción aleatoria">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 7h3c4.5 0 5.5 10 10 10h3"></path>
+      <path d="M17 14l3 3-3 3"></path>
+      <path d="M4 17h3c1.8 0 3-1.5 4.1-3.4"></path>
+      <path d="M13 9.8C14.1 8.2 15.3 7 17 7h3"></path>
+      <path d="M17 4l3 3-3 3"></path>
+    </svg>
+    </button>
+
+
+        <!-- SIGUIENTE -->
+
+        <button
+          id="nextButton"
+          class="kym-button main"
+          type="button"
+          title="Canción siguiente"
+          aria-label="Canción siguiente">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M18 5v14"></path>
+      <path d="M6 6l9 6-9 6z"></path>
+    </svg>
+    </button>
+
+
+        <!-- REPETIR -->
+
+        <button
+          id="repeatButton"
+          class="kym-button"
+          type="button"
+          title="Repetir canción"
+          aria-label="Repetir canción">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M17 4l3 3-3 3"></path>
+      <path d="M20 7H8a4 4 0 0 0-4 4"></path>
+      <path d="M7 20l-3-3 3-3"></path>
+      <path d="M4 17h12a4 4 0 0 0 4-4"></path>
+    </svg>
+    </button>
+
+
+      </div>
+
+
+      <!-- =========================================
+           PLAYLIST
+      ========================================== -->
+
+      <div class="kym-playlist-header">
+
+        <span>
+          ♫ Mi Playlist
+        </span>
+
+        <span class="kym-song-count">
+          9 canciones
+        </span>
+
+      </div>
+
+
+      <div
+        id="playlist"
+        class="kym-playlist">
+      </div>
+
+
+      <!-- =========================================
+           PIE
+      ========================================== -->
+
+      <div class="kym-footer">
+
+        ♫ Corea con mojo · Canarias con kimchi
+
+        <span class="kym-heart">
+          ♡
+        </span>
+
+      </div>
+
+
+    </div>
+
+
+
+    <script>
+
+    /* =====================================================
+       LISTA DE CANCIONES
+    ===================================================== */
+
+    const songs = [
+
+      {
+        title: "Bajo el Qín",
+        file: "Bajo el Qín.mp3"
+      },
+
+      {
+        title: "Puente de Jade",
+        file: "Puente de Jade.mp3"
+      },
+
+      {
+        title: "Puente de Luz",
+        file: "Puente de Luz.mp3"
+      },
+
+      {
+        title: "Puente de Seda",
+        file: "Puente de Seda.mp3"
+      },
+
+      {
+        title: "Tu primera Mirada",
+        file: "Tu primera Mirada.mp3"
+      },
+
+      {
+        title: "Hilo Quebrado",
+        file: "Hilo Quebrado.mp3"
+      },
+
+      {
+        title: "Hilo de amor roto",
+        file: "Hilo de amor roto.mp3"
+      },
+
+      {
+        title: "Mariposas de Jade",
+        file: "Mariposas de Jade.mp3"
+      },
+
+      {
+        title: "Mariposas en el corazón",
+        file: "Mariposas en el corazon.mp3"
+      }
+
+    ];
+
+
+    /* =====================================================
+       ELEMENTOS
+    ===================================================== */
+
+    const audio =
+      document.getElementById(
+        "audioPlayer"
+      );
+
+    const nowPlaying =
+      document.getElementById(
+        "nowPlaying"
+      );
+
+    const playlist =
+      document.getElementById(
+        "playlist"
+      );
+
+    const previousButton =
+      document.getElementById(
+        "previousButton"
+      );
+
+    const nextButton =
+      document.getElementById(
+        "nextButton"
+      );
+
+    const shuffleButton =
+      document.getElementById(
+        "shuffleButton"
+      );
+
+    const repeatButton =
+      document.getElementById(
+        "repeatButton"
+      );
+
+
+    /* =====================================================
+       ESTADO
+    ===================================================== */
+
+    /*
+      4 = Tu primera Mirada
+    */
+
+    let currentSong = 4;
+
+    let shuffleMode = false;
+
+    let repeatMode = false;
+
+
+    /* =====================================================
+       CREAR LAS 9 CANCIONES
+    ===================================================== */
+
+    songs.forEach(
+      function(song, index) {
+
+        const item =
+          document.createElement("div");
+
+
+        item.className =
+          "kym-song";
+
+
+        item.dataset.index =
+          index;
+
+
+        /* Nombre */
+
+        const songName =
+          document.createElement("span");
+
+
+        songName.textContent =
+          song.title;
+
+
+        /* Ecualizador */
+
+        const equalizer =
+          document.createElement("span");
+
+
+        equalizer.className =
+          "kym-equalizer";
+
+
+        for (
+          let i = 0;
+          i < 4;
+          i++
+        ) {
+
+          const bar =
+            document.createElement("span");
+
+
+          bar.className =
+            "kym-bar";
+
+
+          equalizer.appendChild(
+            bar
+          );
+
+        }
+
+
+        item.appendChild(
+          songName
+        );
+
+
+        item.appendChild(
+          equalizer
+        );
+
+
+        /* Al pulsar */
+
+        item.addEventListener(
+          "click",
+          function() {
+
+            loadSong(
+              index,
+              true
+            );
+
+          }
+        );
+
+
+        playlist.appendChild(
+          item
         );
 
       }
     );
 
 
-    playlist.appendChild(
-      item
-    );
+    /* =====================================================
+       ACTUALIZAR ASPECTO PLAYLIST
+    ===================================================== */
 
-  }
-);
+    function updatePlaylist() {
 
-
-/* =====================================================
-   ACTUALIZAR ASPECTO PLAYLIST
-===================================================== */
-
-function updatePlaylist() {
-
-  const items =
-    document.querySelectorAll(
-      ".kym-song"
-    );
-
-
-  items.forEach(
-    function(item, index) {
-
-      item.classList.remove(
-        "active",
-        "playing"
-      );
-
-
-      if (
-        index === currentSong
-      ) {
-
-        item.classList.add(
-          "active"
+      const items =
+        document.querySelectorAll(
+          ".kym-song"
         );
 
 
-        if (
-          !audio.paused
-        ) {
+      items.forEach(
+        function(item, index) {
 
-          item.classList.add(
+          item.classList.remove(
+            "active",
             "playing"
           );
 
-        }
 
-      }
+          if (
+            index === currentSong
+          ) {
 
-    }
-  );
-
-}
-
-
-/* =====================================================
-   CARGAR CANCIÓN
-===================================================== */
-
-function loadSong(
-  index,
-  autoplay
-) {
-
-  currentSong =
-    index;
+            item.classList.add(
+              "active"
+            );
 
 
-  audio.src =
-    encodeURI(
-      songs[index].file
-    );
+            if (
+              !audio.paused
+            ) {
 
+              item.classList.add(
+                "playing"
+              );
 
-  nowPlaying.textContent =
-    songs[index].title;
+            }
 
-
-  audio.load();
-
-
-  updatePlaylist();
-
-
-  if (autoplay) {
-
-    const promise =
-      audio.play();
-
-
-    if (
-      promise !== undefined
-    ) {
-
-      promise.catch(
-        function() {
-
-          /*
-            Algunos navegadores
-            bloquean autoplay.
-          */
+          }
 
         }
       );
 
     }
 
-  }
 
-}
+    /* =====================================================
+       CARGAR CANCIÓN
+    ===================================================== */
 
-
-/* =====================================================
-   SIGUIENTE
-===================================================== */
-
-function nextSong() {
-
-
-  /* ALEATORIO */
-
-  if (shuffleMode) {
-
-    let randomSong;
-
-
-    if (
-      songs.length === 1
+    function loadSong(
+      index,
+      autoplay
     ) {
 
-      randomSong = 0;
+      currentSong =
+        index;
 
-    }
 
-    else {
+      audio.src =
+        encodeURI(
+          songs[index].file
+        );
 
-      do {
 
-        randomSong =
-          Math.floor(
-            Math.random()
-            *
-            songs.length
+      nowPlaying.textContent =
+        songs[index].title;
+
+
+      audio.load();
+
+
+      updatePlaylist();
+
+
+      if (autoplay) {
+
+        const promise =
+          audio.play();
+
+
+        if (
+          promise !== undefined
+        ) {
+
+          promise.catch(
+            function() {
+
+              /*
+                Algunos navegadores
+                bloquean autoplay.
+              */
+
+            }
           );
 
+        }
+
       }
 
-      while (
-        randomSong ===
-        currentSong
+    }
+
+
+    /* =====================================================
+       SIGUIENTE
+    ===================================================== */
+
+    function nextSong() {
+
+
+      /* ALEATORIO */
+
+      if (shuffleMode) {
+
+        let randomSong;
+
+
+        if (
+          songs.length === 1
+        ) {
+
+          randomSong = 0;
+
+        }
+
+        else {
+
+          do {
+
+            randomSong =
+              Math.floor(
+                Math.random()
+                *
+                songs.length
+              );
+
+          }
+
+          while (
+            randomSong ===
+            currentSong
+          );
+
+        }
+
+
+        loadSong(
+          randomSong,
+          true
+        );
+
+
+        return;
+
+      }
+
+
+      /* NORMAL */
+
+      let next =
+        currentSong + 1;
+
+
+      if (
+        next >=
+        songs.length
+      ) {
+
+        next = 0;
+
+      }
+
+
+      loadSong(
+        next,
+        true
       );
 
     }
 
 
-    loadSong(
-      randomSong,
-      true
+    /* =====================================================
+       ANTERIOR
+    ===================================================== */
+
+    function previousSong() {
+
+      let previous =
+        currentSong - 1;
+
+
+      if (
+        previous < 0
+      ) {
+
+        previous =
+          songs.length - 1;
+
+      }
+
+
+      loadSong(
+        previous,
+        true
+      );
+
+    }
+
+
+    /* =====================================================
+       BOTÓN ANTERIOR
+    ===================================================== */
+
+    previousButton.addEventListener(
+      "click",
+      function() {
+
+        previousSong();
+
+      }
     );
 
 
-    return;
+    /* =====================================================
+       BOTÓN SIGUIENTE
+    ===================================================== */
 
-  }
+    nextButton.addEventListener(
+      "click",
+      function() {
 
+        nextSong();
 
-  /* NORMAL */
+      }
+    );
 
-  let next =
-    currentSong + 1;
 
+    /* =====================================================
+       ALEATORIO
+    ===================================================== */
 
-  if (
-    next >=
-    songs.length
-  ) {
+    shuffleButton.addEventListener(
+      "click",
+      function() {
 
-    next = 0;
+        shuffleMode =
+          !shuffleMode;
 
-  }
 
+        shuffleButton
+          .classList
+          .toggle(
+            "active",
+            shuffleMode
+          );
 
-  loadSong(
-    next,
-    true
-  );
 
-}
+        if (shuffleMode) {
 
+          shuffleButton.title =
+            "Aleatorio activado";
 
-/* =====================================================
-   ANTERIOR
-===================================================== */
+        }
 
-function previousSong() {
+        else {
 
-  let previous =
-    currentSong - 1;
+          shuffleButton.title =
+            "Reproducción aleatoria";
 
+        }
 
-  if (
-    previous < 0
-  ) {
+      }
+    );
 
-    previous =
-      songs.length - 1;
 
-  }
+    /* =====================================================
+       REPETIR
+    ===================================================== */
 
+    repeatButton.addEventListener(
+      "click",
+      function() {
 
-  loadSong(
-    previous,
-    true
-  );
+        repeatMode =
+          !repeatMode;
 
-}
 
+        repeatButton
+          .classList
+          .toggle(
+            "active",
+            repeatMode
+          );
 
-/* =====================================================
-   BOTÓN ANTERIOR
-===================================================== */
 
-previousButton.addEventListener(
-  "click",
-  function() {
+        if (repeatMode) {
 
-    previousSong();
+          repeatButton.title =
+            "Repetir activado";
 
-  }
-);
+        }
 
+        else {
 
-/* =====================================================
-   BOTÓN SIGUIENTE
-===================================================== */
+          repeatButton.title =
+            "Repetir canción";
 
-nextButton.addEventListener(
-  "click",
-  function() {
+        }
 
-    nextSong();
+      }
+    );
 
-  }
-);
 
+    /* =====================================================
+       CUANDO EMPIEZA A SONAR
+    ===================================================== */
 
-/* =====================================================
-   ALEATORIO
-===================================================== */
+    audio.addEventListener(
+      "play",
+      function() {
 
-shuffleButton.addEventListener(
-  "click",
-  function() {
+        updatePlaylist();
 
-    shuffleMode =
-      !shuffleMode;
+      }
+    );
 
 
-    shuffleButton
-      .classList
-      .toggle(
-        "active",
-        shuffleMode
-      );
+    /* =====================================================
+       CUANDO SE PAUSA
+    ===================================================== */
 
+    audio.addEventListener(
+      "pause",
+      function() {
 
-    if (shuffleMode) {
+        updatePlaylist();
 
-      shuffleButton.title =
-        "Aleatorio activado";
+      }
+    );
 
-    }
 
-    else {
+    /* =====================================================
+       CUANDO TERMINA
+    ===================================================== */
 
-      shuffleButton.title =
-        "Reproducción aleatoria";
+    audio.addEventListener(
+      "ended",
+      function() {
 
-    }
 
-  }
-);
+        /* REPETIR */
 
+        if (repeatMode) {
 
-/* =====================================================
-   REPETIR
-===================================================== */
+          audio.currentTime = 0;
 
-repeatButton.addEventListener(
-  "click",
-  function() {
 
-    repeatMode =
-      !repeatMode;
+          audio.play();
 
 
-    repeatButton
-      .classList
-      .toggle(
-        "active",
-        repeatMode
-      );
+          return;
 
+        }
 
-    if (repeatMode) {
 
-      repeatButton.title =
-        "Repetir activado";
+        /* SIGUIENTE / ALEATORIO */
 
-    }
+        nextSong();
 
-    else {
+      }
+    );
 
-      repeatButton.title =
-        "Repetir canción";
 
-    }
+    /* =====================================================
+       INICIO
+    ===================================================== */
 
-  }
-);
+    loadSong(
+      currentSong,
+      false
+    );
 
+    </script>
 
-/* =====================================================
-   CUANDO EMPIEZA A SONAR
-===================================================== */
 
-audio.addEventListener(
-  "play",
-  function() {
-
-    updatePlaylist();
-
-  }
-);
-
-
-/* =====================================================
-   CUANDO SE PAUSA
-===================================================== */
-
-audio.addEventListener(
-  "pause",
-  function() {
-
-    updatePlaylist();
-
-  }
-);
-
-
-/* =====================================================
-   CUANDO TERMINA
-===================================================== */
-
-audio.addEventListener(
-  "ended",
-  function() {
-
-
-    /* REPETIR */
-
-    if (repeatMode) {
-
-      audio.currentTime = 0;
-
-
-      audio.play();
-
-
-      return;
-
-    }
-
-
-    /* SIGUIENTE / ALEATORIO */
-
-    nextSong();
-
-  }
-);
-
-
-/* =====================================================
-   INICIO
-===================================================== */
-
-loadSong(
-  currentSong,
-  false
-);
-
-</script>
-
-
-</body>
-</html>
+    </body>
+    </html>
